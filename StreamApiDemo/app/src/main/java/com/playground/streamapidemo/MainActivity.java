@@ -3,6 +3,7 @@ package com.playground.streamapidemo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.List;
  * Other features of JAva 8 works on all platforms.
  *
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InstanceChecker<MainActivity> {
 
     TextView sampleText;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         sampleText.setMovementMethod(new ScrollingMovementMethod());
 
         lambdaSample();
+
+        Log.d("Main", "onCreate: "+instanceOf(this));  // default methods in interface
 
     }
 
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         sampleText.setText(resultString);
 
     }
+
+
 
 
 }
