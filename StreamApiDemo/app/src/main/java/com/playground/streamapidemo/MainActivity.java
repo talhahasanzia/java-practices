@@ -20,7 +20,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements InstanceChecker<MainActivity> {
 
     TextView sampleText;
-
+    String TAG="MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +31,14 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
 
         sampleText.setMovementMethod(new ScrollingMovementMethod());
 
+        Log.d("Main", "onCreate: " + instanceOf(this));  // default methods in interface
+
+
         lambdaSample();
 
-        Log.d("Main", "onCreate: " + instanceOf(this));  // default methods in interface
+
+        funcInterfaceSample();
+
 
 
     }
@@ -82,6 +87,38 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
         sampleText.setText(resultString);
 
     }
+
+
+    @FunctionalInterface
+    interface Converter<F, T> {
+        T convert(F from);
+    }
+
+
+
+    void funcInterfaceSample()
+    {
+
+        Converter<String, Integer> converterNumber = (from) -> Integer.valueOf(from);
+
+        Integer converted = converterNumber.convert("123");
+
+
+        Log.d(TAG, "funcInterfaceSample: String, Integer >> "+converted);    // 123
+
+        Converter<String, String> prefixAdder=(from)->"Mr."+from;
+
+        String AddedString = prefixAdder.convert("Name");
+
+
+        Log.d(TAG, "funcInterfaceSample: String, String >> "+AddedString);    // Mr.Name
+
+
+
+    }
+
+
+
 
 
 }
