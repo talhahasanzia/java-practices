@@ -12,6 +12,7 @@ Java 8 Tutorial : http://winterbe.com/posts/2014/03/16/java-8-tutorial/
 Java 8 new Stream API Demo based on tutorial: http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
 
 
+Android Native Code for Networking using HttpConnection APIs **(Not with Libraries like Volley,  Retrofit and if possible avoid OkHttpClient )**: Rest Calls using HttpClient, and also ftp methods.
 
 
 
