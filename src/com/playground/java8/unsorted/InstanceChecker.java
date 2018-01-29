@@ -1,4 +1,6 @@
-package com.playground.java8;
+package com.playground.java8.unsorted;
+
+import com.playground.java8.Main;
 
 public interface InstanceChecker<T> {
 
