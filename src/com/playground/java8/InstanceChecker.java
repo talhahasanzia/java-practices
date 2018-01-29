@@ -1,16 +1,12 @@
-package com.playground.streamapidemo;
-
-/**
- * Created by VD-Test on 18-Dec-17.
- */
+package com.playground.java8;
 
 public interface InstanceChecker<T> {
 
     default String instanceOf(T t) {
 
-        if (t instanceof MainActivity)
+        if (t instanceof Main)
             return "MainActivity";
-        else if (t instanceof SampleActivity)
+        else if (t instanceof Sample)
             return "Sample Activity";
         else
             return "Wrong Type Implementaion";

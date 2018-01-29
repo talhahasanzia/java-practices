@@ -1,90 +1,26 @@
-package com.playground.streamapidemo;
+package com.playground.java8;
 
-import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.widget.TextView;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-/**
- * Stream API is not supported until API level 24.
- * <p>
- * Other features of JAva 8 works on all platforms.
- *
- *
- * A java.util.Stream represents a sequence of elements on which one or more operations can be performed.
- * Stream operations are either intermediate or terminal.
- * While terminal operations return a result of a certain type,
- * intermediate operations return the stream itself so you can chain multiple method calls in a row.
- * Streams are created on a source, e.g. a java.util.Collection like lists or sets (maps are not supported).
- * Stream operations can either be executed sequential or parallel.
- */
-public class MainActivity extends AppCompatActivity implements InstanceChecker<MainActivity> {
+public class Main {
 
-    TextView sampleText;
-    String TAG = "MainActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        sampleText = findViewById(R.id.sample_textview);
-
-        sampleText.setMovementMethod(new ScrollingMovementMethod());
-
-        Log.d("Main", "onCreate: " + instanceOf(this));  // default methods in interface
-
-
-        lambdaSample();
-
-
-        funcInterfaceSample();
-
-        methodReferencesSample();
-
-        builtInFunctionalInterfacesSample();
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Serialization example
-
-/*
-        DataModel dataModel = new DataModel(5575355089l, "Some Data");
-
-        Intent intent = new Intent(MainActivity.this, SampleActivity.class);
-
-        intent.putExtra("data", dataModel);
-
-        startActivity(intent);*/
+    public static void main(String[] args) {
+	// write your code here
     }
 
     /**  Java 8 streams **/
 
 
-
+    // TODO : Java 8 streams sample methods here
 
 
     /**
      * Preliminaries : Java 8 specific topics
+     *
      **/
 
     String resultString = "Unsorted:\n";
@@ -105,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
 
         names.stream().forEach((String name) -> resultString += name + "\n");  // lambda + stream
 
-        sampleText.setText(resultString);
+
+        // TODO: print output
+        //sampleText.setText(resultString);
 
     }
 
@@ -131,18 +69,18 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
 
         Integer converted = converterNumber.convert("123");
 
-
-        Log.d(TAG, "funcInterfaceSample: String, Integer >> " + converted);    // 123
+        // TODO: print output
+        //Log.d(TAG, "funcInterfaceSample: String, Integer >> " + converted);    // 123
 
 
         Prefixer<String, String> prefixer = (name, FLAG) -> FLAG == Prefixer.MALE ? "Mr." + name : "Ms." + name;
 
+        // TODO: print output
+        //Log.d(TAG, "funcInterfaceSample: Prefixer: " + prefixer.addPrefix("Michael", Prefixer.MALE));
 
-        Log.d(TAG, "funcInterfaceSample: Prefixer: " + prefixer.addPrefix("Michael", Prefixer.MALE));
 
-
-
-        Log.d(TAG, "funcInterfaceSample: Prefixer: " + prefixer.addPrefix("Sarah", Prefixer.FEMALE));
+        // TODO: print output
+       // Log.d(TAG, "funcInterfaceSample: Prefixer: " + prefixer.addPrefix("Sarah", Prefixer.FEMALE));
 
     }
 
@@ -155,19 +93,16 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
         Converter<String, Integer> converter = Integer::valueOf; // Integer's valueOf() has INteger return type & String as parameter.
         Integer converted = converter.convert("355624");
 
-        Log.d(TAG, "methodReferencesSample: "+converted);
-
-
+       // TODO: print output
         // instance method references
         Something something = new Something();
         Converter<String, String> instanceRef = something::startsWith;
         String instanceResult = instanceRef.convert("Java");
-        Log.d(TAG, "methodReferencesSample: Instance method res: "+instanceResult);
+        // TODO: print output
 
         PersonFactory<Person> personFactory = Person::new;  // passing constructor references
         Person person = personFactory.create("Peter", "Parker");
-        Log.d(TAG, "methodReferencesSample: Person object - "+person.toString());
-
+        // TODO: print output
     }
 
 
@@ -269,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
          */
         // Comparators
 
-       // Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName); // old implementation
+        // Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName); // old implementation
         Comparator<Person> comparator = Comparator.comparing(p -> p.firstName);
 
 
@@ -300,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements InstanceChecker<M
 
 
     }
+
+
 
 
 
