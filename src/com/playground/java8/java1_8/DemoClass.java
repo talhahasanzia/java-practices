@@ -6,9 +6,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class demo {
+public class DemoClass {
+
+
     /**
-     * Preliminaries : Java 8 specific topics
+     * Java 8 specific topics
      **/
 
     String resultString = "Unsorted:\n";
@@ -19,7 +21,9 @@ public class demo {
         List<String> names = Arrays.asList("peter", "anna", "mike", "xenia");
 
 
-        names.stream().forEach((String name) -> resultString += name + "\n");  // lambda + stream
+        names.stream().forEach( //  stream
+                (String name) -> resultString += name + "\n" // lambda
+        );
 
 
         Collections.sort(names);
@@ -31,7 +35,7 @@ public class demo {
 
 
         // TODO: print output
-        //sampleText.setText(resultString);
+        // sampleText.setText(resultString);
 
     }
 
@@ -156,6 +160,7 @@ public class demo {
          *  Default methods can be used to chain multiple functions together (compose, andThen).
          *
          */
+
         // Functions
         Function<String, Integer> toInteger = Integer::valueOf;
         Function<String, String> backToString = toInteger.andThen(String::valueOf);
