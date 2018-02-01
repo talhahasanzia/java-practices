@@ -1,15 +1,23 @@
 package com.playground.java8;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import com.playground.java8.objectoriented.Movable;
+import com.playground.java8.objectoriented.PrototypeCar;
 
 public class Main {
 
     public static void main(String[] args) {
 	    // write your code here
+
+        Movable movable=new PrototypeCar(); // referencing class as interface
+
+        movable.switchOn();
+
+        movable.forward();
+
+        PrototypeCar prototypeCar= (PrototypeCar) movable;
+
+        prototypeCar.selfParking();
+
     }
 
 
