@@ -10,7 +10,7 @@ public class MiniCooper extends Vehicle {
     public MiniCooper()
     {
         name="Mini Cooper";  // name is inherited
-        numberPlate="MCR 95"+this.manufacturerID; // "this" is redundant here
+        numberPlate="MCR 95"+manufacturerID; // "this" is redundant here
         vehicleType="Hatchback"; // vehicleType
         engine="668cc"; // Engine
 
