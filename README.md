@@ -3,6 +3,8 @@
 
 OOP Implementation in Java: http://java-questions.com/oops-interview-questions.html
 
+Association-Aggregation-Composition: https://www.infoworld.com/article/3029325/application-development/exploring-association-aggregation-and-composition-in-oop.html
+
 SOLID Principles in Java :https://howtodoinjava.com/best-practices/5-class-design-principles-solid-in-java/
 
 Java Collection: https://docs.oracle.com/javase/tutorial/collections/index.html
