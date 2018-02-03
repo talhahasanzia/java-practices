@@ -1,5 +1,7 @@
 package com.playground.java8.objectoriented;
 
+
+// abstraction
 public abstract class AutonomousVehicle {
 
     private boolean autoPilot;

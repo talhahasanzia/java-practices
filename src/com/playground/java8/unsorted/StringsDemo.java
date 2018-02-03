@@ -4,7 +4,6 @@ public class StringsDemo {
 
     public static void stringsTest() {
         // Strings are immutable - everytime it is manipulated it is allocated a new reference
-        // and old one is allowed to be GCed
 
         String name = "First Name";   // new string
         name = name + " LastName";  // new string (again)
@@ -12,7 +11,7 @@ public class StringsDemo {
 
         // above allocation is equivalent to
         String name2 = "Fname";   // new string
-        String name3 = name2 + " Lname";  // new string  , its immutable, everytime it creates new object in memory
+        String name3 = name2 + " Lname";  // new string
 
 
         // Now to avoid this use StringBuilder
