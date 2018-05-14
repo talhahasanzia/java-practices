@@ -1,22 +1,23 @@
 package com.playground.java8;
 
+import com.playground.java8.java1_8.DemoClass;
+import com.playground.java8.java8_streams.StreamsApiDemo;
 import com.playground.java8.objectoriented.Movable;
 import com.playground.java8.objectoriented.PrototypeCar;
+import com.playground.java8.unsorted.ConstructorRestricter;
 
 public class Main {
 
     public static void main(String[] args) {
-	    // write your code here
 
-        Movable movable=new PrototypeCar(); // referencing class as interface
+        DemoClass demoClass=new DemoClass();
 
-        movable.switchOn();
+        demoClass.streamsSample();
 
-        movable.forward();
+        demoClass.parallelStreamsSample();
 
-        PrototypeCar prototypeCar= (PrototypeCar) movable;
+        demoClass.mapNewOperations();
 
-        prototypeCar.selfParking();
 
     }
 

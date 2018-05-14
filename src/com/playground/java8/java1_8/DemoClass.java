@@ -1,6 +1,7 @@
 package com.playground.java8.java1_8;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -76,7 +77,7 @@ public class DemoClass {
 
     }
 
-
+    // Use case: A step towards functional programming
     public void methodReferencesSample() {
         // using :: to pass method or constructor as references
 
@@ -122,6 +123,7 @@ public class DemoClass {
     }
 
 
+
     public class Something {
         String startsWith(String s) {
             return String.valueOf(s.charAt(0));
@@ -130,7 +132,7 @@ public class DemoClass {
 
     }
 
-
+    // Use case: Validations, chaining, factory, non-returning ops, comparators, optionals
     public void builtInFunctionalInterfacesSample() {
 
         /**
@@ -226,5 +228,181 @@ public class DemoClass {
 
     }
 
+    /**
+     * A java.util.Stream represents a sequence of elements on which one or more operations can be performed.
+     * Stream operations are either intermediate or terminal. While terminal operations return a result of a certain type,
+     * intermediate operations return the stream itself so you can chain multiple method calls in a row.
+     * Streams are created on a source, e.g. a java.util.Collection like lists or sets (maps are not supported).
+     * Stream operations can either be executed sequential or parallel.
+     * Use case: Pure functional programming
+     */
+    public void streamsSample() {
+        List<String> stringCollection = new ArrayList<>();
+        stringCollection.add("ddd2");
+        stringCollection.add("aaa2");
+        stringCollection.add("bbb1");
+        stringCollection.add("aaa1");
+        stringCollection.add("bbb3");
+        stringCollection.add("ccc");
+        stringCollection.add("bbb2");
+        stringCollection.add("ddd1");
+
+        // call .stream() to convert any collection to stream (NOTE: Java 8 only)
+        // print entries (stream) only starting with "a"
+        System.out.println("\n\nWith 'a' only:");
+        stringCollection
+                .stream()
+                .filter((s) -> s.startsWith("a"))
+                .forEach(System.out::println);
+
+        System.out.println("\n\nSorted:");
+
+        stringCollection
+                .stream()
+                .sorted()
+                .filter((s) -> s.startsWith("a"))
+                .forEach(System.out::println);
+
+
+        // Use "map" to perform certain operation on each of the collection item
+        // apply String::toUpperCase operation to each item (stream) in the collection
+        System.out.println("\n\nUpperCase 'Map':");
+        stringCollection
+                .stream()
+                .map(String::toUpperCase)
+                .sorted()
+                .forEach(System.out::println);
+
+
+        // Various matching operations can be used to check whether a certain predicate matches the stream.
+        // All of those operations are terminal and return a boolean result.
+
+        boolean anyStartsWithA =
+                stringCollection
+                        .stream()
+                        .anyMatch((s) -> s.startsWith("a"));
+
+        System.out.println(anyStartsWithA);      // true
+
+        boolean allStartsWithA =
+                stringCollection
+                        .stream()
+                        .allMatch((s) -> s.startsWith("a"));
+
+        System.out.println(allStartsWithA);      // false
+
+        boolean noneStartsWithZ =
+                stringCollection
+                        .stream()
+                        .noneMatch((s) -> s.startsWith("z"));
+
+        System.out.println(noneStartsWithZ);      // true
+
+
+        // Count is a terminal operation returning the number of elements in the stream as a long.
+        long startsWithB =
+                stringCollection
+                        .stream()
+                        .filter((s) -> s.startsWith("b"))
+                        .count();
+
+        System.out.println(startsWithB);    // 3
+
+        // Reduce terminal operation performs a reduction on the elements of the stream with the given function.
+        // The result is an Optional holding the reduced value.
+
+        Optional<String> reduced =
+                stringCollection
+                        .stream()
+                        .sorted()
+                        .reduce((s1, s2) -> s1 + "#" + s2);
+
+        reduced.ifPresent(System.out::println);
+
+    }
+
+    /**
+     * As mentioned above streams can be either sequential or parallel.
+     * Operations on sequential streams are performed on a single thread while operations on parallel streams are performed concurrent on multiple threads.
+     * The following example demonstrates how easy it is to increase the performance by using parallel streams.
+     * Use case: Fast streams processing
+     */
+    public void parallelStreamsSample() {
+        int max = 1000000;
+        List<String> values = new ArrayList<>(max);
+        for (int i = 0; i < max; i++) {
+            UUID uuid = UUID.randomUUID();
+            values.add(uuid.toString());
+        }
+
+        // simple sort (Sequential)
+
+        long t0 = System.nanoTime();
+
+        long count = values.stream().sorted().count();
+        System.out.println(count);
+
+        long t1 = System.nanoTime();
+
+        long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+        System.out.println(String.format("sequential sort took: %d ms", millis));
+
+
+        // Parallel sort
+
+        t0 = System.nanoTime();
+
+        count = values.parallelStream().sorted().count();
+        System.out.println(count);
+
+        t1 = System.nanoTime();
+
+        millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+        System.out.println(String.format("parallel sort took: %d ms", millis));
+
+
+    }
+
+    // Use case: Avoid boiler plate map operations code
+    public void mapNewOperations()
+    {
+
+        Map<Integer, String> map = new HashMap<>();
+
+        for (int i = 0; i < 10; i++) {
+            map.putIfAbsent(i, "val" + i);
+        }
+
+        map.forEach((id, val) -> System.out.println(val));
+
+        map.computeIfPresent(3, (num, val) -> val + num); // lambda (num, val) get (key, value) from map
+        map.get(3);             // val33
+
+        map.computeIfPresent(9, (num, val) -> null);
+        map.containsKey(9);     // false
+
+        map.computeIfAbsent(23, num -> "val" + num);
+        map.containsKey(23);    // true
+
+        map.computeIfAbsent(3, num -> "bam");
+        map.get(3);             // val33
+
+        map.remove(3, "val3");
+        map.get(3);             // val33
+
+        map.remove(3, "val33");
+        map.get(3);             // null
+
+        map.getOrDefault(42, "not found");  // not found
+
+        //  Merging entries of a map is quite easy:
+
+        map.merge(9, "val9", (value, newValue) -> value.concat(newValue));
+        map.get(9);             // val9
+
+        map.merge(9, "concat", (value, newValue) -> value.concat(newValue));
+        map.get(9);             // val9concat
+
+    }
 
 }
