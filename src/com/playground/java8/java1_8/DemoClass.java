@@ -55,7 +55,7 @@ public class DemoClass {
         int FEMALE = 1;
     }
 
-
+    // Lambda Signature: Whats actually defines a lambda under the hood
     public void funcInterfaceSample() {
 
         Converter<String, Integer> converterNumber = (from) -> Integer.valueOf(from);
