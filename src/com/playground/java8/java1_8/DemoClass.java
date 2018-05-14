@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class DemoClass {
 
@@ -318,6 +319,18 @@ public class DemoClass {
                         .reduce((s1, s2) -> s1 + "#" + s2);
 
         reduced.ifPresent(System.out::println);
+
+
+
+        Stream.of("d2", "a2", "b1", "b3", "c")
+                .map(s -> {
+                    System.out.println("map: " + s);
+                    return s.toUpperCase();
+                })
+                .anyMatch(s -> {
+                    System.out.println("anyMatch: " + s);
+                    return s.startsWith("A");
+                });
 
     }
 
