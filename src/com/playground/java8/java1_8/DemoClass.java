@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class DemoClass {
@@ -93,35 +95,17 @@ public class DemoClass {
         String instanceResult = instanceRef.convert("Java");
         // TODO: print output
 
-        PersonFactory<Person> personFactory = Person::new;  // passing constructor references
-        Person person = personFactory.create("Peter", "Parker");
+        PersonFactory<PersonName> personFactory = PersonName::new;  // passing constructor references
+        PersonName personName = personFactory.create("Peter", "Parker");
         // TODO: print output
     }
 
 
-    public interface PersonFactory<P extends Person> {
+    public interface PersonFactory<P extends PersonName> {
         P create(String firstName, String lastName);
     }
 
 
-    public class Person {
-        String firstName;
-        String lastName;
-
-        Person() {
-        }
-
-        Person(String firstName, String lastName) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-        }
-
-        @Override
-        public String toString() {
-            return firstName + "," + lastName;
-        }
-
-    }
 
 
 
@@ -177,8 +161,8 @@ public class DemoClass {
          *
          */
         // Suppliers
-        Supplier<Person> personSupplier = Person::new;
-        personSupplier.get();   // new Person
+        Supplier<PersonName> personSupplier = PersonName::new;
+        personSupplier.get();   // new PersonName
 
 
         /**
@@ -186,8 +170,8 @@ public class DemoClass {
          *
          */
         // Consumers
-        Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
-        greeter.accept(new Person("Luke", "Skywalker"));
+        Consumer<PersonName> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+        greeter.accept(new PersonName("Luke", "Skywalker"));
 
 
         /**
@@ -197,12 +181,12 @@ public class DemoClass {
          */
         // Comparators
 
-        // Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName); // old implementation
-        Comparator<Person> comparator = Comparator.comparing(p -> p.firstName);
+        // Comparator<PersonName> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName); // old implementation
+        Comparator<PersonName> comparator = Comparator.comparing(p -> p.firstName);
 
 
-        Person p1 = new Person("John", "Doe");
-        Person p2 = new Person("Alice", "Wonderland");
+        PersonName p1 = new PersonName("John", "Doe");
+        PersonName p2 = new PersonName("Alice", "Wonderland");
 
         comparator.compare(p1, p2);             // > 0
         comparator.reversed().compare(p1, p2);  // < 0
@@ -321,7 +305,7 @@ public class DemoClass {
         reduced.ifPresent(System.out::println);
 
 
-
+        // anymatch() : iterates until condition is met
         Stream.of("d2", "a2", "b1", "b3", "c")
                 .map(s -> {
                     System.out.println("map: " + s);
@@ -332,6 +316,125 @@ public class DemoClass {
                     return s.startsWith("A");
                 });
 
+        // Chaining behaviour
+        Stream.of("d2", "a2", "b1", "b3", "c")
+                .map(s -> {
+                    System.out.println("map: " + s); // executes everytime
+                    return s.toUpperCase();
+                })
+                .filter(s -> {
+                    System.out.println("filter: " + s);  // executes everytime
+                    return s.startsWith("A");
+                })
+                .forEach(s -> System.out.println("forEach: " + s)); // only executes on filtered objects
+
+        // How order matters
+
+        Stream.of("d2", "a2", "b1", "b3", "c")
+                .filter(s -> {
+                    System.out.println("filter: " + s); // executes for each object
+                    return s.startsWith("a");
+                })
+                .map(s -> {
+                    System.out.println("map: " + s); // executes for filtered values only
+                    return s.toUpperCase();
+                })
+                .forEach(s -> System.out.println("forEach: " + s));  // executes for filtered values only , upper case applied.
+
+        // calling sort after filter  to reduce iterations
+        Stream.of("d2", "a2", "b1", "b3", "c")
+                .filter(s -> {
+                    System.out.println("filter: " + s);
+                    return s.startsWith("a");
+                })
+                .sorted((s1, s2) -> {
+                    System.out.printf("sort: %s; %s\n", s1, s2);
+                    return s1.compareTo(s2);
+                })
+                .map(s -> {
+                    System.out.println("map: " + s);
+                    return s.toUpperCase();
+                })
+                .forEach(s -> System.out.println("forEach: " + s));
+
+
+        // streams cannot be reused once terminal operator is called
+        // to reuse stream we need to create one again
+        Supplier<Stream<String>> streamSupplier =
+                () -> Stream.of("d2", "a2", "b1", "b3", "c")
+                        .filter(s -> s.startsWith("a"));
+
+        streamSupplier.get().anyMatch(s -> true);   // ok, no error, this is terminal operation
+        // ok, if no supplier, it will through exception that accessing stream after terminal operation
+        streamSupplier.get().noneMatch(s -> true);  // similarly we have allMatch
+
+
+        // Sometimes it's useful to transform a regular object stream to a primitive stream or vice versa.
+        // For that purpose object streams support the special mapping operations mapToInt(), mapToLong() and mapToDouble:
+
+        Stream.of("a1", "a2", "a3")
+                .map(s -> s.substring(1))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .ifPresent(System.out::println);  // 3
+
+        // Primitive streams can be transformed to object streams via mapToObj():
+
+        IntStream.range(1, 4)
+                .mapToObj(i -> "a" + i)
+                .forEach(System.out::println);
+
+
+
+    }
+
+
+    public  void streamsInDepth()
+    {
+
+        List<Person> persons =
+                Arrays.asList(
+                        new Person("Max", 18),
+                        new Person("Peter", 23),
+                        new Person("Pamela", 23),
+                        new Person("David", 12));
+
+        // COLLECTORs
+        // transform stream to another type
+        List<Person> filtered =
+                persons
+                        .stream()
+                        .filter(p -> p.name.startsWith("P"))
+                        .collect(Collectors.toList());
+
+        System.out.println(filtered);    // [Peter, Pamela]
+
+
+        // generate a map based on grouping function
+        Map<Integer, List<Person>> personsByAge = persons
+                .stream()
+                .collect(Collectors.groupingBy(p -> p.age));
+
+        personsByAge
+                .forEach((age, p) -> System.out.format("age %s: %s\n", age, p));
+
+        // if this would be primitive stream, we would be able to call stream().average()
+        // since it is non primitive stream, we specify collector function and object it will apply on
+        Double averageAge = persons
+                .stream()
+                .collect(Collectors.averagingInt(p -> p.age));
+
+        System.out.println(averageAge);     // 19.0
+
+
+
+        // to show all statistics
+        IntSummaryStatistics ageSummary =
+                persons
+                        .stream()
+                        .collect(Collectors.summarizingInt(p -> p.age));
+
+        System.out.println(ageSummary);
     }
 
     /**
@@ -377,8 +480,7 @@ public class DemoClass {
     }
 
     // Use case: Avoid boiler plate map operations code
-    public void mapNewOperations()
-    {
+    public void mapNewOperations() {
 
         Map<Integer, String> map = new HashMap<>();
 
